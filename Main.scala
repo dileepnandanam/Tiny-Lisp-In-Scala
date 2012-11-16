@@ -10,7 +10,7 @@ object Main
 			if(statment!="")
 			{
 				var t=interpreter.parse(statment)
-				print(interpreter.eval(t,interpreter.globals))
+				interpreter.eval(t,interpreter.globals)
 			}
 		}
 	}
