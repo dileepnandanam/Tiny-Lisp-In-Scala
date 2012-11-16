@@ -93,6 +93,7 @@ object interpreter
 			{	
 				name match {
 					case Variable("list") => arg.map(eval(_,env))
+					case Variable("cons") => eval(arg(0),env)::(eval(arg(1),env) match {case l:List[Any] => l})
 					case Variable("car") => eval(arg(0),env) match {case l:List[Any] => l.head}
 					case Variable("cdr") => eval(arg(0),env) match {case l:List[Any] => l.tail}
 					
@@ -104,7 +105,7 @@ object interpreter
 					case Variable("define") => env.set(arg(0) match {case Variable(name) => name},eval(arg(1),env))
 					case Variable("lambda") => {
 						arg match {
-							
+							case Nil => "not enough arguments in "+e.toString
 							case List(v1:Variable,e:Expression) =>(x1:Any)=>eval(e,new Env(scala.collection.mutable.Map((v1.name,x1)),env))
 							case List(v1:Variable,v2:Variable,e:Expression) =>(x1:Any,x2:Any)=>eval(e,new Env(scala.collection.mutable.Map((v1.name,x1),(v2.name,x2)),env))
 							case List(v1:Variable,v2:Variable,v3:Variable,e:Expression) => (x1:Any,x2:Any,x3:Any)=>eval(e,new Env(scala.collection.mutable.Map((v1.name,x1),(v2.name,x2),(v3.name,x3)),env))
@@ -113,6 +114,7 @@ object interpreter
 					}
 					case Variable("if") => {
 						arg match {
+							case Nil => "missing predicate "+e.toString
 							case List(c,b1,b2) => if(eval(c,env) match {case b:Boolean => b}) eval(b1,env) else eval(b2,env)
 							case List(c,b1) => if(eval(c,env) match {case b:Boolean => b}) eval(b1,env) 
 						}
